@@ -25,9 +25,11 @@ app.layout = [
     Input('dropdown-selection', 'value'),
     Input('axis-y', 'value')
 )
-def update_graph(value, y_column, countries):
+def update_graph(value, y_column):
     # Use .isin() because 'countries' is now a list
-    dff = df[df.country.isin(countries)]
+    if not value:
+        return px.line(title='Выберите хотя бы одну страну')
+    dff = df[df.country.isin(value)]
     
     # Use the y_column variable to make the chart dynamic
     return px.line(dff, x='year', y=y_column, color='country', 
@@ -39,7 +41,7 @@ def update_graph(value, y_column, countries):
     Input('axis-y', 'value'),
     Input('axis-s', 'value'),
     Input('graph-content', 'hoverData'),
-    prevent_initial_call = True
+    # prevent_initial_call = True
 
 )
 def update_scatter(x_column, y_column, s_column, hover_data):
@@ -51,7 +53,8 @@ def update_scatter(x_column, y_column, s_column, hover_data):
     dff = df[df.year == year]
     # Use the y_column variable to make the chart dynamic
     return px.scatter(df, x=x_column, y=y_column, size=s_column, color='continent',
-                      opacity = 0.5,
+                      hover_name='country',
+                      opacity = 0.7,
                       title = f"Зависимость показателей {x_column}  от {y_column} для стран за {year} год")
 
 if __name__ == '__main__':
