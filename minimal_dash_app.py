@@ -16,9 +16,26 @@ app.layout = [
 
     
     dcc.Graph(id='graph-content'),
-    dcc.Graph(id='scatter-content')
-
+    dcc.Graph(id='scatter-content'),
+    dcc.Graph(id = 'bar-chart'),
+    dcc.Graph(id = 'pie-chart')
 ]
+
+@callback(
+        Output('pie-chart', 'figure'),
+        Input('graph-content', 'hoverData')
+)
+
+def update_pie(hover_data):
+    if not hover_data:
+        year = 2007
+    else:
+        year = hover_data['points'][0]['x']
+
+    dff = df[df.year == year]
+    
+    return px.pie(dff, values = 'pop', names = 'continent',
+                      title = f'Населеление по континентам в {year} году')
 
 @callback(
     Output('graph-content', 'figure'),
@@ -42,8 +59,8 @@ def update_graph(value, y_column):
     Input('axis-s', 'value'),
     Input('graph-content', 'hoverData'),
     # prevent_initial_call = True
-
 )
+
 def update_scatter(x_column, y_column, s_column, hover_data):
     
     if not hover_data:
