@@ -7,7 +7,7 @@ df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapmi
 app = Dash()
 
 app.layout = html.Div([
-    html.H1(children='Dash', style={'textAlign': 'center'}),
+    html.H1(children='', style={'textAlign': 'center'}),
     
     html.Div([
         html.Div([
