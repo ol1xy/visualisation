@@ -74,5 +74,22 @@ def update_scatter(x_column, y_column, s_column, hover_data):
                       opacity = 0.7,
                       title = f"Зависимость показателей {x_column}  от {y_column} для стран за {year} год")
 
+@callback(
+    Output('bar-chart', "figure"),
+    Input('graph-content', 'hoverData')
+)
+
+def update_bar(hover_data):
+    if not hover_data:
+        year = 2007
+    else:
+        year = hover_data['points'][0]['x']
+    
+    dff = df[df.year == year]
+    dff_top15 = dff.sort_values(by='pop', ascending=False).head(15)
+
+    return px.bar(dff_top15, x = 'country', y = 'pop',
+                  title=f'Топ-15 стран по населению в {year} году')
+
 if __name__ == '__main__':
     app.run(debug=True)
