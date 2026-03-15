@@ -52,7 +52,7 @@ def update_scatter(x_column, y_column, s_column, hover_data):
         year = hover_data['points'][0]['x']
     dff = df[df.year == year]
     # Use the y_column variable to make the chart dynamic
-    return px.scatter(df, x=x_column, y=y_column, size=s_column, color='continent',
+    return px.scatter(dff, x=x_column, y=y_column, size=s_column, color='continent',
                       hover_name='country',
                       opacity = 0.7,
                       title = f"Зависимость показателей {x_column}  от {y_column} для стран за {year} год")
