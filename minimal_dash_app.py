@@ -6,20 +6,44 @@ df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapmi
 
 app = Dash()
 
-app.layout = [
-    html.H1(children='Title of Dash App', style={'textAlign':'center'}),
-    # Fixed: multi=True (no quotes)
-    dcc.Dropdown(df.country.unique(), ['Canada'], id='dropdown-selection', multi=True),
-    dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'pop', id='axis-x'),
-    dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'pop', id='axis-y'),
-    dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'pop', id='axis-s'),
-
+app.layout = html.Div([
+    html.H1(children='Dash', style={'textAlign': 'center'}),
     
-    dcc.Graph(id='graph-content'),
-    dcc.Graph(id='scatter-content'),
-    dcc.Graph(id = 'bar-chart'),
-    dcc.Graph(id = 'pie-chart')
-]
+    html.Div([
+        html.Div([
+            html.Label('Country (linear-plot):'),
+            dcc.Dropdown(df.country.unique(), ['Canada', 'Brazil'], id='dropdown-selection', multi=True)
+        ], style={'width': '30%', 'display': 'inline-block', 'padding': '10px'}),
+        
+        html.Div([
+            html.Label('Y-axis (linear-plot):'),
+            dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'pop', id='line-y')
+        ], style={'width': '15%', 'display': 'inline-block', 'padding': '10px'}),
+
+        html.Div([
+            html.Label('X-axis (bubble-plot):'),
+            dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'gdpPercap', id='axis-x')
+        ], style={'width': '15%', 'display': 'inline-block', 'padding': '10px'}),
+
+        html.Div([
+            html.Label('Y-axis (bubble-plot):'),
+            dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'lifeExp', id='axis-y')
+        ], style={'width': '15%', 'display': 'inline-block', 'padding': '10px'}),
+
+        html.Div([
+            html.Label('Size (bubble-plot):'),
+            dcc.Dropdown(['lifeExp', 'pop', 'gdpPercap'], 'pop', id='axis-s')
+        ], style={'width': '15%', 'display': 'inline-block', 'padding': '10px'}),
+    ], style={'backgroundColor': '#f9f9f9', 'padding': '10px', 'borderRadius': '10px', 'marginBottom': '20px'}),
+
+    html.Div([
+        html.Div([dcc.Graph(id='graph-content')], style={'width': '50%', 'display': 'inline-block'}),
+        html.Div([dcc.Graph(id='scatter-content')], style={'width': '50%', 'display': 'inline-block'}),
+
+        html.Div([dcc.Graph(id='bar-chart')], style={'width': '50%', 'display': 'inline-block'}),
+        html.Div([dcc.Graph(id='pie-chart')], style={'width': '50%', 'display': 'inline-block'}),
+    ])
+])
 
 @callback(
         Output('pie-chart', 'figure'),
@@ -40,8 +64,9 @@ def update_pie(hover_data):
 @callback(
     Output('graph-content', 'figure'),
     Input('dropdown-selection', 'value'),
-    Input('axis-y', 'value')
+    Input('line-y', 'value')
 )
+
 def update_graph(value, y_column):
     # Use .isin() because 'countries' is now a list
     if not value:
