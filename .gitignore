@@ -9,6 +9,7 @@
 *.png
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+/tableau
 # CSV-files
 *.csv
 # IPython
